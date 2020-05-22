@@ -19,7 +19,7 @@ class DespesaService {
     };
 
     http.Response response = await http.get(
-        "http://locahost:8888/despesas", headers: header);
+        "http://localhost:8888/despesas", headers: header);
     return decode(response);
   }
 

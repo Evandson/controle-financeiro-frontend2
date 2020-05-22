@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/services/DespesaService.dart';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
+import 'package:controle_financeiro_frontend/Forgot.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -30,71 +31,111 @@ class _HomePageState extends State<HomePage> {
     getDespesas();
   }
 
+  void _addDespesa(){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Forgot()
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:
-        Text("Controle Financeiro", style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.exit_to_app,
-              color: Colors.white,
-            ),
-            onPressed: () {
-            },
-          )
-        ],
-      ),
-
-      body: Center(
-        child: _despesa == null
-            ? CircularProgressIndicator()
-            : ListView.builder(
-            itemCount: _despesa.length,
-            itemBuilder: (BuildContext context, int index) {
-              Despesa despesa = _despesa[index];
-
-              return Padding(padding:EdgeInsets.fromLTRB(20, 2, 20, 2) ,
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 2, 20, 5),
-                        ),
-                        ListTile(
-                          title: Text(
-                              "${despesa.descricao}\n"
-                                  "Valor: ${despesa.valor}"
-                          ),
-                          subtitle: Text(
-                              "Cadastrado: ${despesa.data}"
-                          ),
-                        ),
-                        ButtonTheme.bar(
-                          child: ButtonBar(
-                            children: <Widget>[
-                              FlatButton(
-                                child: const Text('Acessar'),
-                                onPressed: () { /* ... */ },
-                              ),
-                              FlatButton(
-                                child: Text('Excluir'),
-                                textColor: Colors.red,
-                                onPressed: () { /* ... */ },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+    return new Scaffold(
+        body: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.account_circle,
+                      color: Colors.white,
                     ),
+                    onPressed: (){
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.exit_to_app,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                    },
                   )
-              );
-            }
+                ],
+                expandedHeight: 100.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    "Orçamento:\n Despesa:",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                    fontSize: 15,
+                  ),
+                  ),
+                ),
+              ),
+              
+              SliverFillRemaining(
+                child: new Center(
+                  child: _despesa == null
+                      ? CircularProgressIndicator()
+                      : ListView.builder(
+                      itemCount: _despesa.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Despesa despesa = _despesa[index];
+
+                        return Padding(padding:EdgeInsets.fromLTRB(20, 40, 20, 2),
+                            child: Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 2, 20, 10),
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                        "${despesa.descricao}\n"
+                                            "Valor: ${despesa.valor}"
+                                    ),
+                                    subtitle: Text(
+                                        "Cadastrado: ${despesa.data}"
+                                    ),
+                                  ),
+                                  ButtonTheme.bar(
+                                    child: ButtonBar(
+                                      children: <Widget>[
+                                        FlatButton(
+                                          child: const Text('Acessar'),
+                                          onPressed: () { /* ... */ },
+                                        ),
+                                        FlatButton(
+                                          child: Text('Excluir'),
+                                          textColor: Colors.red,
+                                          onPressed: () { /* ... */ },
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(10, 2, 60, 10),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                        );
+                      }
+                  ),
+                ),
+              ),
+            ]
         ),
-      ),
+        floatingActionButton: new FloatingActionButton(
+          elevation: 2.0,
+          onPressed: _addDespesa,
+          child: new Icon(Icons.add)
+        ),
     );
   }
   void getDespesas() async {
