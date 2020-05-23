@@ -5,7 +5,12 @@ import 'package:controle_financeiro_frontend/Cadastro.dart';
 import 'package:controle_financeiro_frontend/utils/AlertaUtils.dart';
 import 'package:controle_financeiro_frontend/services/LoginService.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
 
   final _ctrlEmail = TextEditingController();
   final _ctrlSenha = TextEditingController();

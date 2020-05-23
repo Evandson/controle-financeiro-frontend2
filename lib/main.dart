@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:controle_financeiro_frontend/Login.dart';
+import 'package:controle_financeiro_frontend/Home.dart';
 
 void main() => runApp(MyApp(
 
