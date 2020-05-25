@@ -1,11 +1,7 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:controle_financeiro_frontend/models/Usuario.dart';
 
 class UsuarioService{
   static Future<bool> newUser(String nome, String email, String senha) async {
@@ -42,15 +38,13 @@ class UsuarioService{
 
   static Future<bool> forgotUser(String email) async {
 
-    String _urlBase = "http://localhost:8888/login";
+    String _urlBase = "http://localhost:8888/auth/forgot";
 
     var header = {"Content-Type": "application/json"};
 
     Map params = {
       "email": email
     };
-
-    var prefs = await SharedPreferences.getInstance();
 
     var _body = json.encode(params);
     print("json enviado : $_body");
@@ -60,14 +54,40 @@ class UsuarioService{
 
     print('Response status: ${response.statusCode}');
 
-    String token = response.headers['authorization'];
-    print("authorization $token");
-
-    if (response.statusCode == 200 && token != null) {
-      prefs.setString("authorization", token);
+    if (response.statusCode == 204) {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<List<Usuario>> getUsuario() async {
+
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
+
+    print("authorization : $token");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
+
+    http.Response response = await http.get(
+        "http://localhost:8888/usuarios", headers: header);
+    return decode(response);
+  }
+
+  List<Usuario> decode(http.Response response) {
+    if (response.statusCode == 200) {
+      var decoded = jsonDecode(response.body);
+
+      List<Usuario> usuario = decoded.map<Usuario>((usuario) {
+        return Usuario.fromJson(usuario);
+      }).toList();
+
+      print(usuario);
+      return usuario;
     }
   }
 }

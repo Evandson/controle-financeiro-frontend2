@@ -172,7 +172,7 @@ class _CadastroState extends State<Cadastro> {
     if( usuario == true ){
       _navegaHome(context);
     }else{
-      alert(context,"Login Inválido");
+      //alert(context,"Login Inválido");
     }
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:controle_financeiro_frontend/Home.dart';
+import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:controle_financeiro_frontend/utils/AlertaUtils.dart';
 import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 
@@ -119,16 +119,16 @@ class _ForgotState extends State<Forgot> {
 
     if( usuario == true ){
 
-      _navegaHome(context);
+      alertEmail(context,"Nova senha solicitada para: ${email}");
     }else{
-      alert(context,"Login Inválido");
+      alertEmailNotFound(context,"Email não encontrado!");
     }
   }
 
   _navegaHome(BuildContext context){
     Navigator.push(
       context, MaterialPageRoute(
-        builder : (context)=> Home()
+        builder : (context)=> Login()
     ),
     );
   }
