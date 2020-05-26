@@ -178,7 +178,7 @@ class _LoginState extends State<Login> {
 
       _navegaHome(context);
     }else{
-      alertLogin(context,"Login Inválido");
+      alert(context,"Login Inválido", "Login");
     }
   }
 

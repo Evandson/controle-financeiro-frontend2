@@ -119,9 +119,9 @@ class _ForgotState extends State<Forgot> {
 
     if( usuario == true ){
 
-      alertEmail(context,"Nova senha solicitada para: ${email}");
+      alert(context,"Nova senha solicitada para: ${email}", "Confirmação de Envio");
     }else{
-      alertEmailNotFound(context,"Email não encontrado!");
+      alert(context,"Email não encontrado!", "Fallha na Solicitação");
     }
   }
 
