@@ -6,16 +6,15 @@ import 'package:controle_financeiro_frontend/models/Usuario.dart';
 class UsuarioService{
   static Future<bool> newUser(String nome, String email, String senha) async {
 
-    String _urlBase = "http://localhost:8888/login";
+    String _urlBase = "http://localhost:8888/usuarios";
 
     var header = {"Content-Type": "application/json"};
 
     Map params = {
+      "nome": nome,
       "email": email,
       "senha": senha
     };
-
-    var prefs = await SharedPreferences.getInstance();
 
     var _body = json.encode(params);
     print("json enviado : $_body");
@@ -25,11 +24,7 @@ class UsuarioService{
 
     print('Response status: ${response.statusCode}');
 
-    String token = response.headers['authorization'];
-    print("authorization $token");
-
-    if (response.statusCode == 200 && token != null) {
-      prefs.setString("authorization", token);
+    if (response.statusCode == 201) {
       return true;
     } else {
       return false;
