@@ -75,13 +75,17 @@ class _ForgotState extends State<Forgot> {
   }
 
   String _validaEmail(String texto) {
-    if(texto.isEmpty){
+    String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\'
+        r'".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(('
+        r'[a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (texto.length == 0) {
       return "Digite o Email";
+    } else if(!regExp.hasMatch(texto)){
+      return "Email inválido";
+    }else {
+      return null;
     }
-    if(texto.length<3){
-      return "O campo precisa ter mais de 3 caracteres";
-    }
-    return null;
   }
 
   _raisedButton(
@@ -119,13 +123,12 @@ class _ForgotState extends State<Forgot> {
     var usuario = await UsuarioService.forgotUser(email);
 
     if( usuario == true ){
-
+      _navegaHome(context);
       alert(context,"Nova senha solicitada para: ${email}", "Confirmação de Envio");
     }else{
       alert(context,"Email não encontrado!", "Fallha na Solicitação");
     }
   }
-
   _navegaHome(BuildContext context){
     Navigator.push(
       context, MaterialPageRoute(
