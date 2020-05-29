@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/Home.dart';
+import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:controle_financeiro_frontend/utils/AlertaUtils.dart';
 import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 
@@ -8,13 +9,14 @@ class Cadastro extends StatefulWidget {
   _CadastroState createState() => _CadastroState();
 }
 
-final _ctrlNome = TextEditingController();
-final _ctrlEmail = TextEditingController();
-final _ctrlSenha = TextEditingController();
-final _ctrlConfSenha = TextEditingController();
-final _formKey = GlobalKey<FormState>();
-
 class _CadastroState extends State<Cadastro> {
+
+  final _ctrlNome = TextEditingController();
+  final _ctrlEmail = TextEditingController();
+  final _ctrlSenha = TextEditingController();
+  final _ctrlConfSenha = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -34,45 +36,46 @@ class _CadastroState extends State<Cadastro> {
     return Form(
       key: _formKey,
       child: Container(
-        padding: EdgeInsets.all(50),
-        child: ListView(
-          children: <Widget>[
-            Center(
-              child: Text("Cadastro de usuário",
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-            ),
-            _textFormField(
-                "Nome",
-                "Digite o Nome",
-                controller: _ctrlNome,
-                validator : _validaNome
-            ),
-            _textFormField(
-                "Email",
-                "Digite o Email",
-                controller: _ctrlEmail,
-                validator : _validaEmail
-            ),
-            _textFormField(
-                "Senha",
-                "Digite a Senha",
-                senha: true,
-                controller: _ctrlSenha,
-                validator : _validaSenha
-            ),
-            _textFormField(
-                "Confirmar Senha",
-                "Digite a Senha",
-                controller: _ctrlConfSenha,
-                validator : _validaSenha
-            ),
-            Padding(
-                padding: EdgeInsets.only(top: 5, bottom: 5)
-            ),
-            _raisedButton("Cadastrar", Colors.blue, context),
-          ]
-        )
+          padding: EdgeInsets.all(50),
+          child: ListView(
+              children: <Widget>[
+                Center(
+                  child: Text("Cadastro de usuário",
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                ),
+                _textFormField(
+                    "Nome",
+                    "Digite o Nome",
+                    controller: _ctrlNome,
+                    validator : _validaNome
+                ),
+                _textFormField(
+                    "Email",
+                    "Digite o Email",
+                    controller: _ctrlEmail,
+                    validator : _validaEmail
+                ),
+                _textFormField(
+                    "Senha",
+                    "Digite a Senha",
+                    senha: true,
+                    controller: _ctrlSenha,
+                    validator : _validaSenha
+                ),
+                _textFormField(
+                    "Confirmar Senha",
+                    "Digite a Senha",
+                    senha: true,
+                    controller: _ctrlConfSenha,
+                    validator : _validaConfSenha
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5)
+                ),
+                _raisedButton("Cadastrar", Colors.blue, context),
+              ]
+          )
       ),
     );
   }
@@ -132,6 +135,16 @@ class _CadastroState extends State<Cadastro> {
     return null;
   }
 
+  String _validaConfSenha(String texto) {
+    if(texto.isEmpty){
+      return "Digite a Senha";
+    }
+    if (texto.length < 8) {
+      return "Mínimo de 8 caracteres";
+    }
+    return null;
+  }
+
   _raisedButton(
       String texto,
       Color cor,
@@ -167,19 +180,28 @@ class _CadastroState extends State<Cadastro> {
 
     print("login : $nome senha: $email" "login : $senha senha: $confSenha");
 
-    var usuario = await UsuarioService.newUser(nome, email, senha);
+    var _confirmPassword = await UsuarioService.confirmPassword(senha, confSenha);
 
-    if( usuario == true ){
+    if(_confirmPassword == true){
+      alert(context,"As senhas informadas não conferem!", "Senha inválida");
+    }
+
+    var usuario;
+    if(_confirmPassword == false) {
+      usuario = await UsuarioService.newUser(nome, email, senha);
+    }
+    if(usuario == true){
       _navegaHome(context);
-    }else{
-      //alert(context,"Login Inválido");
+      alert(context,"Usuário Cadastrado!\n Faça o login para acessar.", "Confirmação de Cadastro");
+    }else if(usuario == false){
+      alert(context,"Email já cadastrado!", "Erro ao Cadastrar");
     }
   }
 
   _navegaHome(BuildContext context){
     Navigator.push(
       context, MaterialPageRoute(
-        builder : (context)=> Home()
+        builder : (context)=> Login()
     ),
     );
   }

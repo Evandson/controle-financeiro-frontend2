@@ -8,10 +8,11 @@ class Forgot extends StatefulWidget {
   _ForgotState createState() => _ForgotState();
 }
 
-final _ctrlEmail = TextEditingController();
-final _formKey = GlobalKey<FormState>();
-
 class _ForgotState extends State<Forgot> {
+
+  final _ctrlEmail = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

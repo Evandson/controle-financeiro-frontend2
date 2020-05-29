@@ -31,6 +31,16 @@ class UsuarioService{
     }
   }
 
+  static Future<bool> confirmPassword(String senha, String confSenha) async {
+
+    if (senha != confSenha) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
   static Future<bool> forgotUser(String email) async {
 
     String _urlBase = "http://localhost:8888/auth/forgot";
