@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:controle_financeiro_frontend/models/Usuario.dart';
 
-class UsuarioService{
-  static Future<bool> newUser(String nome, String email, String senha) async {
+class UsuarioService {
 
+  static Future<bool> newUser(String nome, String email, String senha) async {
     String _urlBase = "http://localhost:8888/usuarios";
 
     var header = {"Content-Type": "application/json"};
@@ -32,7 +32,6 @@ class UsuarioService{
   }
 
   static Future<bool> confirmPassword(String senha, String confSenha) async {
-
     if (senha != confSenha) {
       return true;
     } else {
@@ -40,9 +39,7 @@ class UsuarioService{
     }
   }
 
-
   static Future<bool> forgotUser(String email) async {
-
     String _urlBase = "http://localhost:8888/auth/forgot";
 
     var header = {"Content-Type": "application/json"};
@@ -67,7 +64,6 @@ class UsuarioService{
   }
 
   Future<List<Usuario>> getUsuario() async {
-
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
 

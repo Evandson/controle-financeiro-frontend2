@@ -1,13 +1,9 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
 class LoginService{
+
   static Future<bool> login(String email, String senha) async {
 
     String _urlBase = "http://localhost:8888/login";

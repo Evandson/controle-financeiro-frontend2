@@ -1,6 +1,6 @@
 class TipoDespesa {
-  final int id;
-  final String tipo;
+  int id;
+  String tipo;
 
   TipoDespesa({this.id, this.tipo});
 
