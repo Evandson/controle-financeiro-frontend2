@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DespesaService {
 
   Future<List<Despesa>> getDespesas() async {
-
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
 
@@ -18,7 +17,7 @@ class DespesaService {
     };
 
     http.Response response = await http.get(
-        "http://localhost:8888/despesas", headers: header);
+        "http://192.168.0.12:8888/despesas", headers: header);
     return decode(response);
   }
 

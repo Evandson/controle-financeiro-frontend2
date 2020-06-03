@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/services/DespesaService.dart';
-import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 import 'package:controle_financeiro_frontend/services/LogoutService.dart';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
@@ -105,12 +104,11 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 ListTile(
                                   title: Text(
-                                      "${despesa.tipoDespesa}\n"
                                       "${despesa.descricao}\n"
                                           "Valor: ${despesa.valor}"
                                   ),
                                   subtitle: Text(
-                                      "Cadastrado: ${despesa.data}"
+                                      "Tipo: ${despesa.tipoDespesa}\nCadastrado: ${despesa.data}"
                                   ),
                                 ),
                                 ButtonTheme.bar(

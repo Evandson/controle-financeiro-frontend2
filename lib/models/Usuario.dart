@@ -11,7 +11,7 @@ class Usuario {
       id: json["id"],
       email: json["valor"],
       nome: json["descricao"],
-      orcamento: json["data"],
+      orcamento: json["data"]
     );
   }
 }
