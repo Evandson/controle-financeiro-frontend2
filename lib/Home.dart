@@ -3,7 +3,6 @@ import 'package:controle_financeiro_frontend/services/DespesaService.dart';
 import 'package:controle_financeiro_frontend/services/LogoutService.dart';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
-import 'package:controle_financeiro_frontend/LogoutRedirect.dart';
 
 class Home extends StatelessWidget {
   @override

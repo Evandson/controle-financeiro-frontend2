@@ -17,7 +17,7 @@ class DespesaService {
     };
 
     http.Response response = await http.get(
-        "http://192.168.0.12:8888/despesas", headers: header);
+        "http://localhost:8888/despesas", headers: header);
     return decode(response);
   }
 

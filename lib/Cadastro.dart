@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:controle_financeiro_frontend/Home.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:controle_financeiro_frontend/utils/AlertaUtils.dart';
 import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
