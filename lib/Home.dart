@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/services/DespesaService.dart';
 import 'package:controle_financeiro_frontend/services/LogoutService.dart';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
+import 'package:controle_financeiro_frontend/Profile.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
 
 class Home extends StatelessWidget {
@@ -60,8 +61,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.account_circle,
                     color: Colors.white,
                   ),
-                  onPressed: (){
-                  },
+                  onPressed: (){_navegaProfile(context);},
                 ),
                 IconButton(
                   icon: Icon(
@@ -148,5 +148,11 @@ class _HomePageState extends State<HomePage> {
   void getDespesas() async {
     _despesa = await _despesaService.getDespesas();
     setState(() {});
+  }
+  _navegaProfile(BuildContext context){
+    Navigator.push(
+      context, MaterialPageRoute(
+        builder : (context)=> Profile()),
+    );
   }
 }

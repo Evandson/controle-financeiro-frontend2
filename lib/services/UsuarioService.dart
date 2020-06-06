@@ -63,7 +63,7 @@ class UsuarioService {
     }
   }
 
-  Future<List<Usuario>> getUsuario() async {
+  Future<Usuario> getUsuario() async {
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
 
@@ -75,20 +75,15 @@ class UsuarioService {
     };
 
     http.Response response = await http.get(
-        "http://localhost:8888/usuarios", headers: header);
+        "http://localhost:8888/usuarios/1", headers: header);
     return decode(response);
   }
 
-  List<Usuario> decode(http.Response response) {
+  Usuario decode(http.Response response) {
     if (response.statusCode == 200) {
-      var decoded = jsonDecode(response.body);
-
-      List<Usuario> usuario = decoded.map<Usuario>((usuario) {
-        return Usuario.fromJson(usuario);
-      }).toList();
-
-      print(usuario);
-      return usuario;
+        return new Usuario.fromJson(jsonDecode(response.body));
+    }else{
+      Exception("Falha na requisição");
     }
   }
 }
