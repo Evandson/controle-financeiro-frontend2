@@ -20,7 +20,6 @@ class TipoDespesaService {
         return TipoDespesa.fromJson(tipoDespesa);
       }).toList();
 
-      print(tipoDespesa);
       return tipoDespesa;
     }
   }

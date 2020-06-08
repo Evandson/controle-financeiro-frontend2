@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:controle_financeiro_frontend/models/Usuario.dart';
+import 'package:controle_financeiro_frontend/models/User.dart';
 
 class UsuarioService {
 
@@ -17,12 +18,12 @@ class UsuarioService {
     };
 
     var _body = json.encode(params);
-    print("json enviado : $_body");
+    //print("json enviado : $_body");
 
     var response = await http.post(_urlBase, headers: header,
         body: _body);
 
-    print('Response status: ${response.statusCode}');
+    //print('Response status: ${response.statusCode}');
 
     if (response.statusCode == 201) {
       return true;
@@ -49,12 +50,12 @@ class UsuarioService {
     };
 
     var _body = json.encode(params);
-    print("json enviado : $_body");
+    //print("json enviado : $_body");
 
     var response = await http.post(_urlBase, headers: header,
         body: _body);
 
-    print('Response status: ${response.statusCode}');
+    //print('Response status: ${response.statusCode}');
 
     if (response.statusCode == 204) {
       return true;
@@ -63,11 +64,11 @@ class UsuarioService {
     }
   }
 
-  Future<Usuario> getUsuario() async {
+  Future<Usuario> getUsuario(int id) async {
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
 
-    print("authorization : $token");
+    //print("authorization : $token");
 
     var header = {
       "Content-Type": "application/json",
@@ -75,13 +76,35 @@ class UsuarioService {
     };
 
     http.Response response = await http.get(
-        "http://localhost:8888/usuarios/1", headers: header);
+        "http://localhost:8888/usuarios/${id}", headers: header);
     return decode(response);
   }
 
   Usuario decode(http.Response response) {
     if (response.statusCode == 200) {
-        return new Usuario.fromJson(jsonDecode(response.body));
+      return Usuario.fromJson(jsonDecode(response.body));
+    } else {
+      Exception("Falha na requisição");
+    }
+  }
+
+  Future<User> getUserByEmail(String email) async {
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
+
+    http.Response response = await http.get(
+        "http://localhost:8888/usuarios/email?value=${email}", headers: header);
+    return decodeJson(response);
+  }
+
+  User decodeJson(http.Response response) {
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
     }else{
       Exception("Falha na requisição");
     }

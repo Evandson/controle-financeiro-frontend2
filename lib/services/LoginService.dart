@@ -30,6 +30,7 @@ class LoginService{
 
     if (response.statusCode == 200 && token != null) {
       prefs.setString("authorization", token);
+      prefs.setString("login", email);
       return true;
     } else {
       return false;

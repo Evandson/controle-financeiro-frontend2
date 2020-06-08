@@ -170,7 +170,7 @@ class _LoginState extends State<Login> {
     String email = _ctrlEmail.text;
     String senha = _ctrlSenha.text;
 
-    print("login : $email senha: $senha");
+    print("login :${_ctrlEmail.text} senha: $senha");
 
     var usuario = await LoginService.login(email,senha);
 
