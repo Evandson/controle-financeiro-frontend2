@@ -108,7 +108,9 @@ class _HomePageState extends State<HomePage> {
               Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                 child: new Center(
                   child: _despesa == null
-                      ? CircularProgressIndicator()
+                      ? CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  )
                       : ListView.builder(
                       itemCount: _despesa.length,
                       itemBuilder: (BuildContext context, int index) {

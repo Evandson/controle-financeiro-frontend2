@@ -52,40 +52,76 @@ class _ProfileState extends State<Profile> {
                 ? Center(
               child: CircularProgressIndicator(),
             ):
-            Padding(padding: EdgeInsets.fromLTRB(10, 0, 10,0),
+            Padding(padding: EdgeInsets.fromLTRB(1, 0, 1, 0),
                 child: Card(
                   child: Column(
                     children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                      ),
+                      Center(
+                        child: Text("Perfil de usuário",
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                      ),
                       ListTile(
                         title: Text(
                           "Nome: ${this._usuario.nome}",
                           textAlign: TextAlign.left,
                           style: TextStyle(fontSize: 15),
                         ),
-                        trailing: Text(
-                          "Orçamento: ${this._usuario.orcamento}",
-                          textAlign: TextAlign.center,
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () {
+                            _navegaHome(context);
+                          },
                         ),
                         subtitle: Text(
-                          "Email: ${this._usuario.email}",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 15),
-
+                            "Orçamento: R\$ ${this._usuario.orcamento.toStringAsFixed(2)}",
+                            style: TextStyle(fontSize: 15, color: Colors.black)
                         ),
                       ),
-                      ButtonTheme.bar(
-                        child: ButtonBar(
-                          children: <Widget>[
-                            FlatButton(
-                              child: const Text('Editar'),
-                              onPressed: () {
-                                /* ... */
-                              },
-                            ),
-                          ],
+                      ListTile(
+                        title: Text(
+                            "Email: ${this._usuario.email}",
+                            style: TextStyle(fontSize: 15)
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () {
+                            _navegaHome(context);
+                          },
                         ),
                       ),
-                    ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 10, bottom: 10),
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          child: Text(
+                              "Alterar senha?", style: TextStyle(
+                            color: Colors.blue
+                          ),
+                          ),
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Home())
+                            );
+                          },
+                        ),
+                      )
+                    ]
                   ),
                 )
             )
