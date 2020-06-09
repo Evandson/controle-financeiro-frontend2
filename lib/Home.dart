@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/services/DespesaService.dart';
 import 'package:controle_financeiro_frontend/services/LogoutService.dart';
+import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
+import 'package:controle_financeiro_frontend/models/User.dart';
+import 'package:controle_financeiro_frontend/models/Usuario.dart';
 import 'package:controle_financeiro_frontend/Profile.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -11,8 +15,7 @@ class Home extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
-      theme: ThemeData(
-      ),
+      theme: ThemeData(),
     );
   }
 }
@@ -29,10 +32,18 @@ class _HomePageState extends State<HomePage> {
 
   LogoutService _logoutService = LogoutService();
 
+  Usuario _usuario = new Usuario();
+  UsuarioService _usuarioService = UsuarioService();
+
+  User _user = new User();
+
+  var loading = null;
+
   @override
   void initState() {
     super.initState();
     getDespesas();
+    getOrcamento();
   }
 
   void _addDespesa(){
@@ -52,6 +63,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.blue,
       body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
@@ -61,22 +73,28 @@ class _HomePageState extends State<HomePage> {
                     Icons.account_circle,
                     color: Colors.white,
                   ),
-                  onPressed: (){_navegaProfile(context);},
+                  onPressed: () {
+                    _navegaProfile(context);
+                  },
                 ),
                 IconButton(
                   icon: Icon(
                     Icons.exit_to_app,
                     color: Colors.white,
                   ),
-                  onPressed: () {_logout();},
+                  onPressed: () {
+                    _logout();
+                  },
                 )
               ],
-              expandedHeight: 100.0,
+              expandedHeight: 130.0,
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
-                  "Orçamento:\n Despesa:",
+                  loading == null ? "Carregando...":
+                  "Orçamento: ${this._usuario.orcamento.toStringAsFixed(2)}\n "
+                      "Despesa: ${this._usuario.orcamento.toStringAsFixed(2)}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -86,64 +104,86 @@ class _HomePageState extends State<HomePage> {
             ),
 
             SliverFillRemaining(
-              child: new Center(
-                child: _despesa == null
-                    ? CircularProgressIndicator()
-                    : ListView.builder(
-                    itemCount: _despesa.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Despesa despesa = _despesa[index];
+              child:
+              Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                child: new Center(
+                  child: _despesa == null
+                      ? CircularProgressIndicator()
+                      : ListView.builder(
+                      itemCount: _despesa.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Despesa despesa = _despesa[index];
 
-                      return Padding(padding:EdgeInsets.fromLTRB(20, 40, 20, 2),
-                          child: Card(
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 2, 20, 10),
-                                ),
-                                ListTile(
-                                  title: Text(
-                                      "${despesa.descricao}\n"
-                                          "Valor: ${despesa.valor}"
+                        return Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 2, 20, 10),
                                   ),
-                                  subtitle: Text(
-                                      "Tipo: ${despesa.tipoDespesa}\nCadastrado: ${despesa.data}"
+                                  ListTile(
+                                    title: Text(
+                                        "${despesa.descricao}\n"
+                                    ),
+                                    trailing: Text(
+                                      "R\$ ${despesa.valor.toStringAsFixed(2)}",
+                                      style: TextStyle(fontSize: 16)
+                                    ),
+                                    subtitle: Text(
+                                        "Tipo: ${despesa.tipoDespesa}\n${despesa
+                                            .data}",
+                                        style: TextStyle(fontSize: 12)
+                                    ),
                                   ),
-                                ),
-                                ButtonTheme.bar(
-                                  child: ButtonBar(
-                                    children: <Widget>[
-                                      FlatButton(
-                                        child: const Text('Acessar'),
-                                        onPressed: () { /* ... */ },
-                                      ),
-                                      FlatButton(
-                                        child: Text('Excluir'),
-                                        textColor: Colors.red,
-                                        onPressed: () { /* ... */ },
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(10, 2, 60, 10),
-                                      ),
-                                    ],
+                                  ButtonTheme.bar(
+                                    child: ButtonBar(
+                                      children: <Widget>[
+                                        FlatButton(
+                                          child: const Text('Acessar'),
+                                          onPressed: () {
+                                            /* ... */
+                                          },
+                                        ),
+                                        FlatButton(
+                                          child: Text('Excluir'),
+                                          textColor: Colors.red,
+                                          onPressed: () {
+                                            /* ... */
+                                          },
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(
+                                              10, 2, 80, 10),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
-                      );
-                    }
+                                ],
+                              ),
+                            )
+                        );
+                      }
+                  ),
                 ),
               ),
-            ),
+            )
           ]
       ),
       floatingActionButton: new FloatingActionButton(
-          elevation: 2.0,
-          onPressed: _addDespesa,
-          child: new Icon(Icons.add)
+        elevation: 2.0,
+        onPressed: _addDespesa,
+        child: new Icon(Icons.add),
+        backgroundColor: Colors.blue,
       ),
     );
+  }
+  void getOrcamento() async {
+    var prefs = await SharedPreferences.getInstance();
+    String email = (prefs.getString("login") ?? "");
+    _user = await _usuarioService.getUserByEmail(email);
+    _usuario = await _usuarioService.getUsuario(this._user.id);
+    loading = 1;
+    setState(() {});
   }
   void getDespesas() async {
     _despesa = await _despesaService.getDespesas();

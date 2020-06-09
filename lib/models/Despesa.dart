@@ -4,7 +4,7 @@ class Despesa {
   String descricao;
   String data;
   String tipoDespesa;
-  int usuario;
+  double usuario;
 
   Despesa({this.id, this.valor, this.descricao, this.data, this.tipoDespesa, this.usuario});
 
@@ -15,7 +15,7 @@ class Despesa {
         descricao: json["descricao"],
         data: json["data"],
         tipoDespesa: json["tipoDespesa"]["tipo"],
-        usuario: json["usuario"]["id"]
+        usuario: json["usuario"]["orcamento"]
     );
   }
 }
