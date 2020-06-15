@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   User _user = new User();
 
   var loading = null;
+  var id;
 
   @override
   void initState() {
@@ -128,14 +129,17 @@ class _HomePageState extends State<HomePage> {
                                         "${despesa.descricao}\n"
                                     ),
                                     trailing: Text(
-                                      "R\$ ${despesa.valor.toStringAsFixed(2)}",
-                                      style: TextStyle(fontSize: 16)
+                                        "R\$ ${despesa.valor.toStringAsFixed(2)}",
+                                        style: TextStyle(fontSize: 16)
                                     ),
                                     subtitle: Text(
                                         "Tipo: ${despesa.tipoDespesa}\n${despesa
                                             .data}",
                                         style: TextStyle(fontSize: 12)
                                     ),
+                                    onTap: (){
+
+                                    },
                                   ),
                                   ButtonTheme.bar(
                                     child: ButtonBar(
@@ -143,14 +147,12 @@ class _HomePageState extends State<HomePage> {
                                         FlatButton(
                                           child: const Text('Acessar'),
                                           onPressed: () {
-                                            /* ... */
                                           },
                                         ),
                                         FlatButton(
                                           child: Text('Excluir'),
                                           textColor: Colors.red,
                                           onPressed: () {
-                                            /* ... */
                                           },
                                         ),
                                         Padding(
@@ -191,6 +193,7 @@ class _HomePageState extends State<HomePage> {
     _despesa = await _despesaService.getDespesas();
     setState(() {});
   }
+
   _navegaProfile(BuildContext context){
     Navigator.push(
       context, MaterialPageRoute(
