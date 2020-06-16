@@ -109,4 +109,25 @@ class UsuarioService {
       Exception("Falha na requisição");
     }
   }
+
+  static Future<bool> newPassword(String senha, int id) async {
+    String _urlBase = "http://localhost:8888/usuarios/${id}";
+
+    var header = {"Content-Type": "application/json"};
+
+    Map params = {
+      "senha": senha
+    };
+
+    var _body = json.encode(params);
+
+    var response = await http.put(_urlBase, headers: header,
+        body: _body);
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:controle_financeiro_frontend/utils/AlertaUtils.dart';
 import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NewPassword extends StatefulWidget {
   @override
@@ -139,9 +140,12 @@ class _NewPasswordState extends State<NewPassword> {
       alert(context,"As senhas informadas não conferem!", "Senha inválida");
     }
 
-    /*var usuario;
+    var prefs = await SharedPreferences.getInstance();
+    int id = (prefs.getInt("id") ?? "");
+
+    var usuario;
     if(_confirmPassword == false) {
-      usuario = await UsuarioService.newUser(nome, email, senha);
+      usuario = await UsuarioService.newPassword(senha, id);
     }
     if(usuario == true){
       _navegaHome(context);
@@ -149,7 +153,7 @@ class _NewPasswordState extends State<NewPassword> {
     }else if(usuario == false){
       alert(context,"Email já cadastrado!", "Erro ao Cadastrar");
     }
-  }*/
+  }
 
   _navegaHome(BuildContext context){
     Navigator.push(
@@ -157,6 +161,5 @@ class _NewPasswordState extends State<NewPassword> {
         builder : (context)=> Login()
     ),
     );
-  }
   }
 }

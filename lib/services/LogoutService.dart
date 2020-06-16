@@ -11,8 +11,12 @@ class LogoutService {
 
     var prefsDelete = await SharedPreferences.getInstance();
     var tokenRemovido = (prefsDelete.remove("authorization") ?? "");
+    var emailRemovido = (prefsDelete.remove("login") ?? "");
+    var idRemovido = (prefsDelete.remove("id") ?? "");
 
     print("authorization : $tokenRemovido");
+    print("authorization : $emailRemovido");
+    print("authorization : $idRemovido");
   }
 }
 
