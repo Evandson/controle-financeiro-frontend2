@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:controle_financeiro_frontend/utils/AlertaUtils.dart';
 import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
+import 'package:controle_financeiro_frontend/services/LogoutService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class NewPassword extends StatefulWidget {
   @override
@@ -14,6 +16,19 @@ class _NewPasswordState extends State<NewPassword> {
   final _ctrlSenha = TextEditingController();
   final _ctrlConfSenha = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  LogoutService _logoutService = LogoutService();
+
+  _logout()async{
+    var token = _logoutService.deleteToken();
+    print("Token removido: $token");
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Login()
+        )
+    );
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,24 +157,17 @@ class _NewPasswordState extends State<NewPassword> {
 
     var prefs = await SharedPreferences.getInstance();
     int id = (prefs.getInt("id") ?? "");
+    print("ID: ${id}");
 
     var usuario;
     if(_confirmPassword == false) {
       usuario = await UsuarioService.newPassword(senha, id);
     }
     if(usuario == true){
-      _navegaHome(context);
-      alert(context,"Usuário Cadastrado!\n Faça o login para acessar.", "Confirmação de Cadastro");
+      _logout();
+      alert(context,"Faça o login para acessar.", "Senha atualizada!");
     }else if(usuario == false){
-      alert(context,"Email já cadastrado!", "Erro ao Cadastrar");
+      alert(context,"Erro ao atualizar!", "Erro na solicitação");
     }
-  }
-
-  _navegaHome(BuildContext context){
-    Navigator.push(
-      context, MaterialPageRoute(
-        builder : (context)=> Login()
-    ),
-    );
   }
 }

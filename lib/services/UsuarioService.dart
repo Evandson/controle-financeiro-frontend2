@@ -111,9 +111,15 @@ class UsuarioService {
   }
 
   static Future<bool> newPassword(String senha, int id) async {
-    String _urlBase = "http://localhost:8888/usuarios/${id}";
+    String _urlBase = "http://localhost:8888/usuarios/password/1";
 
-    var header = {"Content-Type": "application/json"};
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
 
     Map params = {
       "senha": senha
@@ -124,7 +130,9 @@ class UsuarioService {
     var response = await http.put(_urlBase, headers: header,
         body: _body);
 
-    if (response.statusCode == 201) {
+    print ("resposta ${response.statusCode}");
+
+    if (response.statusCode == 204) {
       return true;
     } else {
       return false;

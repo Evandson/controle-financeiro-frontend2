@@ -18,16 +18,27 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Controle Financeiro",
-            style:
-            TextStyle(
-                color: Colors.white)
-        ),
-        centerTitle: true,
-      ),
-      body: _body(context),
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Controle Financeiro",
+                style:
+                TextStyle(
+                    color: Colors.white
+                )
+            ),
+            leading: IconButton(
+                icon: Icon(Icons.refresh, color: Colors.white10,),
+                onPressed: () => Navigator.pushReplacement
+                  (context,
+                    MaterialPageRoute
+                      (builder: (context) => Login()))
+            ),
+            centerTitle: true,
+          ),
+          body: _body(context),
+        )
     );
   }
 
@@ -60,10 +71,10 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.only(top: 5, bottom: 5)
             ),
             _raisedButton("Login", Colors.blue, context),
-          Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10)
-          ),
-          Center(
+            Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10)
+            ),
+            Center(
               child: GestureDetector(
                   child: Text(
                       "Não tem conta? cadastre-se!",
@@ -73,14 +84,14 @@ class _LoginState extends State<Login> {
                   ),
                   onTap: (){
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Cadastro()
-                      )
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Cadastro()
+                        )
                     );
                   }
               ),
-          ),
+            ),
             Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10)
             ),
@@ -94,10 +105,10 @@ class _LoginState extends State<Login> {
                   ),
                   onTap: (){
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Forgot()
-                      )
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Forgot()
+                        )
                     );
                   }
               ),
