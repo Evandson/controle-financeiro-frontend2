@@ -111,7 +111,7 @@ class UsuarioService {
   }
 
   static Future<bool> newPassword(String senha, int id) async {
-    String _urlBase = "http://localhost:8888/usuarios/password/1";
+    String _urlBase = "http://localhost:8888/usuarios/password/${id}";
 
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
