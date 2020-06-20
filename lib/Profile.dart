@@ -3,7 +3,7 @@ import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 import 'package:controle_financeiro_frontend/models/Usuario.dart';
 import 'package:controle_financeiro_frontend/models/User.dart';
 import 'package:controle_financeiro_frontend/Home.dart';
-import 'package:controle_financeiro_frontend/NewPassword.dart';
+import 'package:controle_financeiro_frontend/LoginAlt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -117,7 +117,8 @@ class _ProfileState extends State<Profile> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => NewPassword())
+                                  builder: (context) => LoginAlt()
+                              )
                             );
                           },
                         ),
