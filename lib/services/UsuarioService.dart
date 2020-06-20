@@ -76,7 +76,7 @@ class UsuarioService {
     };
 
     http.Response response = await http.get(
-        "http://192.168.0.12:8888/usuarios/${id}", headers: header);
+        "http://localhost:8888/usuarios/${id}", headers: header);
     return decode(response);
   }
 
@@ -98,7 +98,7 @@ class UsuarioService {
     };
 
     http.Response response = await http.get(
-        "http://192.168.0.12:8888/usuarios/email?value=${email}", headers: header);
+        "http://localhost:8888/usuarios/email?value=${email}", headers: header);
     return decodeJson(response);
   }
 
@@ -111,7 +111,7 @@ class UsuarioService {
   }
 
   static Future<bool> newPassword(String senha, int id) async {
-    String _urlBase = "http://192.168.0.12:8888/usuarios/password/${id}";
+    String _urlBase = "http://localhost:8888/usuarios/password/${id}";
 
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
