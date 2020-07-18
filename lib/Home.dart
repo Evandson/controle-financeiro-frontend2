@@ -3,6 +3,7 @@ import 'package:controle_financeiro_frontend/services/DespesaService.dart';
 import 'package:controle_financeiro_frontend/services/LogoutService.dart';
 import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
+import 'package:controle_financeiro_frontend/models/DespesaTotal.dart';
 import 'package:controle_financeiro_frontend/models/User.dart';
 import 'package:controle_financeiro_frontend/models/Usuario.dart';
 import 'package:controle_financeiro_frontend/Profile.dart';
@@ -35,6 +36,9 @@ class _HomePageState extends State<HomePage> {
   Usuario _usuario = new Usuario();
   UsuarioService _usuarioService = UsuarioService();
 
+  DespesaTotal _DespesaTotal = new DespesaTotal();
+
+
   User _user = new User();
 
   var loading = null;
@@ -45,6 +49,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getDespesas();
     getOrcamento();
+    getTotalDespesas();
   }
 
   void _addDespesa(){
@@ -95,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   loading == null ? "Carregando...":
                   "Orçamento: ${this._usuario.orcamento.toStringAsFixed(2)}\n "
-                      "Despesa: ${this._usuario.orcamento.toStringAsFixed(2)}",
+                      "Despesa: ${this._DespesaTotal.total.toStringAsFixed(2)}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -191,6 +196,11 @@ class _HomePageState extends State<HomePage> {
   }
   void getDespesas() async {
     _despesa = await _despesaService.getDespesas();
+    setState(() {});
+  }
+
+  void getTotalDespesas() async {
+    _DespesaTotal = await _despesaService.totalDespesa();
     setState(() {});
   }
 

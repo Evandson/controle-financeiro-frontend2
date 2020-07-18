@@ -14,9 +14,9 @@ class LogoutService {
     var emailRemovido = (prefsDelete.remove("login") ?? "");
     var idRemovido = (prefsDelete.remove("id") ?? "");
 
-    print("authorization : $tokenRemovido");
-    print("authorization : $emailRemovido");
-    print("authorization : $idRemovido");
+    print("tokenRemovido : $tokenRemovido");
+    print("emailRemovido : $emailRemovido");
+    print("idRemovido : $idRemovido");
   }
 }
 

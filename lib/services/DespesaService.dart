@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
+import 'package:controle_financeiro_frontend/models/DespesaTotal.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,4 +35,26 @@ class DespesaService {
       return despesa;
     }
   }
-}
+    Future<DespesaTotal> totalDespesa() async {
+      var prefs = await SharedPreferences.getInstance();
+      String token = (prefs.getString("authorization") ?? "");
+
+      var header = {
+        "Content-Type": "application/json",
+        "Authorization": "$token"
+      };
+
+      http.Response response = await http.get(
+          "http://localhost:8888/despesas/total", headers: header);
+      return decodeJson(response);
+    }
+
+  DespesaTotal decodeJson(http.Response response) {
+      if (response.statusCode == 200) {
+        print(response.body);
+        return DespesaTotal.fromJson(jsonDecode(response.body));
+      }else{
+        Exception("Falha na requisição");
+      }
+    }
+  }
