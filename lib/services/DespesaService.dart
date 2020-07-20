@@ -35,26 +35,55 @@ class DespesaService {
       return despesa;
     }
   }
-    Future<DespesaTotal> totalDespesa() async {
-      var prefs = await SharedPreferences.getInstance();
-      String token = (prefs.getString("authorization") ?? "");
 
-      var header = {
-        "Content-Type": "application/json",
-        "Authorization": "$token"
-      };
+  Future<DespesaTotal> totalDespesa() async {
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
 
-      http.Response response = await http.get(
-          "http://localhost:8888/despesas/total", headers: header);
-      return decodeJson(response);
-    }
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
+
+    http.Response response = await http.get(
+        "http://localhost:8888/despesas/total", headers: header);
+    return decodeJson(response);
+  }
 
   DespesaTotal decodeJson(http.Response response) {
-      if (response.statusCode == 200) {
-        print(response.body);
-        return DespesaTotal.fromJson(jsonDecode(response.body));
-      }else{
-        Exception("Falha na requisição");
-      }
+    if (response.statusCode == 200) {
+      print(response.body);
+      return DespesaTotal.fromJson(jsonDecode(response.body));
+    } else {
+      Exception("Falha na requisição");
     }
   }
+
+  Future<List<Despesa>> deleteDespesa(int id) async {
+
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
+
+    http.Response response = await http.delete(
+        "http://localhost:8888/despesas/${id}", headers: header);
+    return decode(response);
+  }
+  List<Despesa> decode2(http.Response response) {
+    if (response.statusCode == 200) {
+      var decoded = jsonDecode(response.body);
+      print("Decoded: $decoded");
+
+      List<Despesa> despesa = decoded.map<Despesa>((despesa) {
+        return Despesa.fromJson(despesa);
+      }).toList();
+
+      print(despesa);
+      return despesa;
+    }
+  }
+}

@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   Usuario _usuario = new Usuario();
   UsuarioService _usuarioService = UsuarioService();
 
-  DespesaTotal _DespesaTotal = new DespesaTotal();
+  DespesaTotal _despesaTotal = new DespesaTotal();
 
 
   User _user = new User();
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   loading == null ? "Carregando...":
                   "Orçamento: ${this._usuario.orcamento.toStringAsFixed(2)}\n "
-                      "Despesa: ${this._DespesaTotal.total.toStringAsFixed(2)}",
+                      "Despesa: ${this._despesaTotal.total.toStringAsFixed(2)}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -158,6 +158,7 @@ class _HomePageState extends State<HomePage> {
                                           child: Text('Excluir'),
                                           textColor: Colors.red,
                                           onPressed: () {
+                                            deleteDespesas(despesa.id);
                                           },
                                         ),
                                         Padding(
@@ -200,8 +201,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getTotalDespesas() async {
-    _DespesaTotal = await _despesaService.totalDespesa();
+    _despesaTotal = await _despesaService.totalDespesa();
     setState(() {});
+  }
+
+  void deleteDespesas(int id) async {
+    _despesa = await _despesaService.deleteDespesa(id);
+    setState(() {
+      getDespesas();
+      getTotalDespesas();
+    });
   }
 
   _navegaProfile(BuildContext context){
