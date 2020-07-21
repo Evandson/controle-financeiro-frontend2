@@ -5,6 +5,7 @@ import 'package:controle_financeiro_frontend/models/User.dart';
 import 'package:controle_financeiro_frontend/Home.dart';
 import 'package:controle_financeiro_frontend/LoginAlt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:controle_financeiro_frontend/utils/FormatUtils.dart';
 
 
 class Profile extends StatefulWidget {
@@ -84,7 +85,7 @@ class _ProfileState extends State<Profile> {
                           },
                         ),
                         subtitle: Text(
-                            "Orçamento: R\$ ${this._usuario.orcamento.toStringAsFixed(2)}",
+                            "Orçamento: R\$ ${formatNumero(_usuario.orcamento)}",
                             style: TextStyle(fontSize: 15, color: Colors.black)
                         ),
                       ),

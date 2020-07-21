@@ -9,6 +9,7 @@ import 'package:controle_financeiro_frontend/models/Usuario.dart';
 import 'package:controle_financeiro_frontend/Profile.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:controle_financeiro_frontend/utils/FormatUtils.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -28,6 +29,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  TextEditingController _descricaoController = TextEditingController();
+  TextEditingController _valorController = TextEditingController();
+
   List<Despesa> _despesa;
   DespesaService _despesaService = DespesaService();
 
@@ -38,11 +42,68 @@ class _HomePageState extends State<HomePage> {
 
   DespesaTotal _despesaTotal = new DespesaTotal();
 
-
   User _user = new User();
 
   var loading = null;
   var id;
+
+  _inserirAtualizarDespesa( {Despesa despesa} ){
+
+    String texto = "";
+    if(despesa == null){//salvar
+      _descricaoController.text = "";
+      _valorController.text = "";
+      texto = "Adicionar";
+    }else{//atualizar
+      _descricaoController.text = despesa.descricao;
+      _valorController.text = despesa.valor.toString();
+      texto = "Atualizar";
+    }
+
+    showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Text("$texto despesa"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: _descricaoController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                      labelText: "Descrição",
+                      hintText: "Digite a descrição"
+                  ),
+                ),
+                TextField(
+                  controller: _valorController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      labelText: "Valor",
+                      hintText: "Digite o valor"
+                  ),
+                )
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancelar")
+              ),
+              FlatButton(
+                  onPressed: (){
+
+                    //_salvarAtualizarDespesa(despesaEsc: despesa);
+                    Navigator.pop(context);
+                  },
+                  child: Text(texto)
+              )
+            ],
+          );
+        }
+    );
+  }
 
   @override
   void initState() {
@@ -50,9 +111,6 @@ class _HomePageState extends State<HomePage> {
     getDespesas();
     getOrcamento();
     getTotalDespesas();
-  }
-
-  void _addDespesa(){
   }
 
   _logout()async{
@@ -99,8 +157,8 @@ class _HomePageState extends State<HomePage> {
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   loading == null ? "Carregando...":
-                  "Orçamento: ${this._usuario.orcamento.toStringAsFixed(2)}\n "
-                      "Despesa: ${this._despesaTotal.total.toStringAsFixed(2)}",
+                  "Orçamento: ${formatNumero(this._usuario.orcamento)}\n "
+                      "Despesa: ${formatNumero(this._despesaTotal.total)}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -134,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                                         "${despesa.descricao}\n"
                                     ),
                                     trailing: Text(
-                                        "R\$ ${despesa.valor.toStringAsFixed(2)}",
+                                        "R\$ ${formatNumero(despesa.valor)}",
                                         style: TextStyle(fontSize: 16)
                                     ),
                                     subtitle: Text(
@@ -152,6 +210,7 @@ class _HomePageState extends State<HomePage> {
                                         FlatButton(
                                           child: const Text('Acessar'),
                                           onPressed: () {
+                                            _inserirAtualizarDespesa(despesa: despesa);
                                           },
                                         ),
                                         FlatButton(
@@ -181,7 +240,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: new FloatingActionButton(
         elevation: 2.0,
-        onPressed: _addDespesa,
+        onPressed: _inserirAtualizarDespesa,
         child: new Icon(Icons.add),
         backgroundColor: Colors.blue,
       ),
@@ -216,7 +275,8 @@ class _HomePageState extends State<HomePage> {
   _navegaProfile(BuildContext context){
     Navigator.push(
       context, MaterialPageRoute(
-        builder : (context)=> Profile()),
+        builder : (context)=> Profile()
+    ),
     );
   }
 }
