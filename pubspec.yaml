@@ -23,6 +23,7 @@ dependencies:
   shared_preferences: ^0.5.3
   dio: 2.1.6 #latest version
   intl: ^0.15.8
+  flutter_masked_text: ^0.8.0
 
 dev_dependencies:
   flutter_test:

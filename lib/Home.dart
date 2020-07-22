@@ -10,6 +10,7 @@ import 'package:controle_financeiro_frontend/Profile.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:controle_financeiro_frontend/utils/FormatUtils.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -30,7 +31,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   TextEditingController _descricaoController = TextEditingController();
-  TextEditingController _valorController = TextEditingController();
+  final _valorController = MoneyMaskedTextController();
+
 
   List<Despesa> _despesa;
   DespesaService _despesaService = DespesaService();
@@ -56,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       texto = "Adicionar";
     }else{//atualizar
       _descricaoController.text = despesa.descricao;
-      _valorController.text = despesa.valor.toString();
+      _valorController.text = formatNumero(despesa.valor);
       texto = "Atualizar";
     }
 
@@ -154,6 +156,7 @@ class _HomePageState extends State<HomePage> {
               expandedHeight: 130.0,
               floating: false,
               pinned: true,
+              elevation: 0,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   loading == null ? "Carregando...":
@@ -169,7 +172,7 @@ class _HomePageState extends State<HomePage> {
 
             SliverFillRemaining(
               child:
-              Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+              Padding(padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
                 child: new Center(
                   child: _despesa == null
                       ? CircularProgressIndicator(
@@ -193,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     trailing: Text(
                                         "R\$ ${formatNumero(despesa.valor)}",
-                                        style: TextStyle(fontSize: 16)
+                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
                                     ),
                                     subtitle: Text(
                                         "Tipo: ${despesa.tipoDespesa}\n${despesa
