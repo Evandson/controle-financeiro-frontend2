@@ -1,11 +1,10 @@
 import 'dart:convert';
-
 import 'package:controle_financeiro_frontend/models/TipoDespesa.dart';
 import 'package:http/http.dart' as http;
 
 class TipoDespesaService {
 
-   Future<List<TipoDespesa>> getTipoDespesas() async {
+  Future<List<TipoDespesa>> getTipoDespesas() async {
 
     http.Response response = await http.get(
         "http://localhost:8888/tipoDespesas");

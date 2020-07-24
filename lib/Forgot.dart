@@ -58,6 +58,7 @@ class _ForgotState extends State<Forgot> {
       ),
     );
   }
+
   _textFormField(
       String label,
       String hint, {
@@ -129,6 +130,7 @@ class _ForgotState extends State<Forgot> {
       alert(context,"Email não encontrado!", "Fallha na Solicitação");
     }
   }
+
   _navegaHome(BuildContext context){
     Navigator.push(
       context, MaterialPageRoute(

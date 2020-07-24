@@ -20,6 +20,7 @@ class _NewPasswordState extends State<NewPassword> {
   LogoutService _logoutService = LogoutService();
 
   _logout()async{
+
     var token = _logoutService.deleteToken();
     print("Token removido: $token");
     Navigator.pushReplacement(
@@ -80,6 +81,7 @@ class _NewPasswordState extends State<NewPassword> {
       ),
     );
   }
+
   _textFormField(
       String label,
       String hint, {

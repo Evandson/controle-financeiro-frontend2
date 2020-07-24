@@ -172,6 +172,7 @@ class _CadastroState extends State<Cadastro> {
     if (!formOk) {
       return;
     }
+
     String nome = _ctrlNome.text;
     String email = _ctrlEmail.text;
     String senha = _ctrlSenha.text;

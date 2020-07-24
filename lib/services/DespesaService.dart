@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DespesaService {
 
   Future<List<Despesa>> getDespesas() async {
+
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
 
@@ -37,6 +38,7 @@ class DespesaService {
   }
 
   Future<DespesaTotal> totalDespesa() async {
+
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
 
@@ -55,7 +57,7 @@ class DespesaService {
       print(response.body);
       return DespesaTotal.fromJson(jsonDecode(response.body));
     } else {
-      Exception("Falha na requisição");
+      Exception("Falha ao excluir despesa");
     }
   }
 
@@ -73,6 +75,7 @@ class DespesaService {
         "http://localhost:8888/despesas/${id}", headers: header);
     return decode(response);
   }
+
   List<Despesa> decode2(http.Response response) {
     if (response.statusCode == 200) {
       var decoded = jsonDecode(response.body);

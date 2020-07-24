@@ -10,6 +10,7 @@ import 'package:controle_financeiro_frontend/Profile.dart';
 import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:controle_financeiro_frontend/utils/FormatUtils.dart';
+import 'package:controle_financeiro_frontend/utils/MenuUtils.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Home extends StatelessWidget {
@@ -48,6 +49,139 @@ class _HomePageState extends State<HomePage> {
 
   var loading = null;
   var id;
+
+  @override
+  void initState() {
+    super.initState();
+    getDespesas();
+    getOrcamento();
+    getTotalDespesas();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      backgroundColor: Colors.blue,
+      body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.account_circle,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _navegaProfile(context);
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.exit_to_app,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _logout();
+                  },
+                )
+              ],
+              expandedHeight: 130.0,
+              floating: false,
+              pinned: true,
+              elevation: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  loading == null ? "Carregando...":
+                  "Orçamento: ${formatNumero(_usuario.orcamento)}\n "
+                      "Despesa: ${formatNumero(_despesaTotal.total)}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+
+            SliverFillRemaining(
+              child:
+              Padding(padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
+                child: new Center(
+                  child: _despesa == null
+                      ? CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  )
+                      : ListView.builder(
+                      itemCount: _despesa.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Despesa despesa = _despesa[index];
+
+                        return Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 2, 20, 10),
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                        "${despesa.descricao}\n"
+                                    ),
+                                    trailing: Text(
+                                        "R\$ ${formatNumero(despesa.valor)}",
+                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+                                    ),
+                                    contentPadding: EdgeInsets.only(right: 16,),
+                                    leading: PopupMenuButton(
+                                      onSelected: (selection){
+                                        switch (selection) {
+                                          case MenuUtils.Excluir:
+                                            deleteDespesa(despesa.id);
+                                            break;
+                                          case MenuUtils.Editar:
+                                            _inserirAtualizarDespesa(despesa: despesa);
+                                        }
+                                      },
+                                      itemBuilder: (BuildContext context){
+                                        return MenuUtils.opcoes.map((String opcoes){
+                                          return PopupMenuItem<String>(
+                                            value: opcoes,
+                                            child: Text(opcoes),
+                                          );
+                                        }).toList();
+                                      },
+                                    ),
+                                    subtitle: Text(
+                                        "Tipo: ${despesa.tipoDespesa}\n${despesa
+                                            .data}",
+                                        style: TextStyle(fontSize: 12)
+                                    ),
+                                    onTap: (){
+                                      _inserirAtualizarDespesa(despesa: despesa);
+                                    },
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                        20, 2, 20, 10),
+                                  ),
+                                ],
+                              ),
+                            )
+                        );
+                      }
+                  ),
+                ),
+              ),
+            )
+          ]
+      ),
+      floatingActionButton: new FloatingActionButton(
+        elevation: 2.0,
+        onPressed: _inserirAtualizarDespesa,
+        child: new Icon(Icons.add),
+        backgroundColor: Colors.blue,
+      ),
+    );
+  }
 
   _inserirAtualizarDespesa( {Despesa despesa} ){
 
@@ -107,12 +241,31 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getDespesas();
-    getOrcamento();
-    getTotalDespesas();
+  void getOrcamento() async {
+    var prefs = await SharedPreferences.getInstance();
+    String email = (prefs.getString("login") ?? "");
+    _user = await _usuarioService.getUserByEmail(email);
+    _usuario = await _usuarioService.getUsuario(this._user.id);
+    loading = 1;
+    setState(() {});
+  }
+
+  void getDespesas() async {
+    _despesa = await _despesaService.getDespesas();
+    setState(() {});
+  }
+
+  void getTotalDespesas() async {
+    _despesaTotal = await _despesaService.totalDespesa();
+    setState(() {});
+  }
+
+  void deleteDespesa(int id) async {
+    _despesa = await _despesaService.deleteDespesa(id);
+    setState(() {
+      getDespesas();
+      getTotalDespesas();
+    });
   }
 
   _logout()async{
@@ -124,155 +277,6 @@ class _HomePageState extends State<HomePage> {
             builder: (context) => Login()
         )
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.blue,
-      body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.account_circle,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    _navegaProfile(context);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.exit_to_app,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    _logout();
-                  },
-                )
-              ],
-              expandedHeight: 130.0,
-              floating: false,
-              pinned: true,
-              elevation: 0,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text(
-                  loading == null ? "Carregando...":
-                  "Orçamento: ${formatNumero(this._usuario.orcamento)}\n "
-                      "Despesa: ${formatNumero(this._despesaTotal.total)}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ),
-
-            SliverFillRemaining(
-              child:
-              Padding(padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
-                child: new Center(
-                  child: _despesa == null
-                      ? CircularProgressIndicator(
-                    backgroundColor: Colors.white,
-                  )
-                      : ListView.builder(
-                      itemCount: _despesa.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        Despesa despesa = _despesa[index];
-
-                        return Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                            child: Card(
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 2, 20, 10),
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                        "${despesa.descricao}\n"
-                                    ),
-                                    trailing: Text(
-                                        "R\$ ${formatNumero(despesa.valor)}",
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
-                                    ),
-                                    subtitle: Text(
-                                        "Tipo: ${despesa.tipoDespesa}\n${despesa
-                                            .data}",
-                                        style: TextStyle(fontSize: 12)
-                                    ),
-                                    onTap: (){
-
-                                    },
-                                  ),
-                                  ButtonTheme.bar(
-                                    child: ButtonBar(
-                                      children: <Widget>[
-                                        FlatButton(
-                                          child: const Text('Acessar'),
-                                          onPressed: () {
-                                            _inserirAtualizarDespesa(despesa: despesa);
-                                          },
-                                        ),
-                                        FlatButton(
-                                          child: Text('Excluir'),
-                                          textColor: Colors.red,
-                                          onPressed: () {
-                                            deleteDespesas(despesa.id);
-                                          },
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              10, 2, 80, 10),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                        );
-                      }
-                  ),
-                ),
-              ),
-            )
-          ]
-      ),
-      floatingActionButton: new FloatingActionButton(
-        elevation: 2.0,
-        onPressed: _inserirAtualizarDespesa,
-        child: new Icon(Icons.add),
-        backgroundColor: Colors.blue,
-      ),
-    );
-  }
-  void getOrcamento() async {
-    var prefs = await SharedPreferences.getInstance();
-    String email = (prefs.getString("login") ?? "");
-    _user = await _usuarioService.getUserByEmail(email);
-    _usuario = await _usuarioService.getUsuario(this._user.id);
-    loading = 1;
-    setState(() {});
-  }
-  void getDespesas() async {
-    _despesa = await _despesaService.getDespesas();
-    setState(() {});
-  }
-
-  void getTotalDespesas() async {
-    _despesaTotal = await _despesaService.totalDespesa();
-    setState(() {});
-  }
-
-  void deleteDespesas(int id) async {
-    _despesa = await _despesaService.deleteDespesa(id);
-    setState(() {
-      getDespesas();
-      getTotalDespesas();
-    });
   }
 
   _navegaProfile(BuildContext context){

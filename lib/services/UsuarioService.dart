@@ -18,12 +18,9 @@ class UsuarioService {
     };
 
     var _body = json.encode(params);
-    //print("json enviado : $_body");
 
     var response = await http.post(_urlBase, headers: header,
         body: _body);
-
-    //print('Response status: ${response.statusCode}');
 
     if (response.statusCode == 201) {
       return true;
@@ -41,6 +38,7 @@ class UsuarioService {
   }
 
   static Future<bool> forgotUser(String email) async {
+
     String _urlBase = "http://localhost:8888/auth/forgot";
 
     var header = {"Content-Type": "application/json"};
@@ -50,12 +48,9 @@ class UsuarioService {
     };
 
     var _body = json.encode(params);
-    //print("json enviado : $_body");
 
     var response = await http.post(_urlBase, headers: header,
         body: _body);
-
-    //print('Response status: ${response.statusCode}');
 
     if (response.statusCode == 204) {
       return true;
@@ -65,10 +60,9 @@ class UsuarioService {
   }
 
   Future<Usuario> getUsuario(int id) async {
+
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
-
-    //print("authorization : $token");
 
     var header = {
       "Content-Type": "application/json",
@@ -89,6 +83,7 @@ class UsuarioService {
   }
 
   Future<User> getUserByEmail(String email) async {
+
     var prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString("authorization") ?? "");
 
@@ -111,6 +106,7 @@ class UsuarioService {
   }
 
   static Future<bool> newPassword(String senha, int id) async {
+
     String _urlBase = "http://localhost:8888/usuarios/password/${id}";
 
     var prefs = await SharedPreferences.getInstance();

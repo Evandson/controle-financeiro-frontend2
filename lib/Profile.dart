@@ -132,12 +132,14 @@ class _ProfileState extends State<Profile> {
     );
   }
   void getUsuario() async {
+
     var prefs = await SharedPreferences.getInstance();
     String email = (prefs.getString("login") ?? "");
     _user = await _usuarioService.getUserByEmail(email);
     _usuario = await _usuarioService.getUsuario(this._user.id);
     prefs.setInt("id", this._user.id);
     loading = 1;
+
     setState(() {});
   }
 
