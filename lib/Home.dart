@@ -11,6 +11,7 @@ import 'package:controle_financeiro_frontend/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:controle_financeiro_frontend/utils/FormatUtils.dart';
 import 'package:controle_financeiro_frontend/utils/MenuUtils.dart';
+import 'package:controle_financeiro_frontend/utils/SnackbarUtils.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Home extends StatelessWidget {
@@ -91,7 +92,7 @@ class _HomePageState extends State<HomePage> {
               elevation: 0,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
-                  loading == null ? "Carregando...":
+                  loading  == null ? "Carregando...":
                   "Orçamento: ${formatNumero(_usuario.orcamento)}\n "
                       "Despesa: ${formatNumero(_despesaTotal.total)}",
                   textAlign: TextAlign.center,
@@ -109,8 +110,7 @@ class _HomePageState extends State<HomePage> {
                   child: _despesa == null
                       ? CircularProgressIndicator(
                     backgroundColor: Colors.white,
-                  )
-                      : ListView.builder(
+                  ):ListView.builder(
                       itemCount: _despesa.length,
                       itemBuilder: (BuildContext context, int index) {
                         Despesa despesa = _despesa[index];
@@ -136,6 +136,7 @@ class _HomePageState extends State<HomePage> {
                                         switch (selection) {
                                           case MenuUtils.Excluir:
                                             deleteDespesa(despesa.id);
+                                            snackbar(context, "Despesa excluída");
                                             break;
                                           case MenuUtils.Editar:
                                             _inserirAtualizarDespesa(despesa: despesa);
