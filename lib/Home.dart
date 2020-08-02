@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   loading  == null ? "Carregando...":
                   "Orçamento: ${formatNumero(_usuario.orcamento)}\n "
-                      "Despesa: ${formatNumero(_despesaTotal.total)}",
+                      "Despesa: ${_configurarDespesaTotal()}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -267,6 +267,14 @@ class _HomePageState extends State<HomePage> {
       getDespesas();
       getTotalDespesas();
     });
+  }
+
+  _configurarDespesaTotal() {
+    if (_despesaTotal.total != null ){
+      return formatNumero(_despesaTotal.total);
+    }else{
+      return "0";
+    }
   }
 
   _logout()async{
