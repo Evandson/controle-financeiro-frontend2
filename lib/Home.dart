@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   loading  == null ? "Carregando...":
                   "Orçamento: ${formatNumero(_usuario.orcamento)}\n "
-                      "Despesa: ${_configurarDespesaTotal()}",
+                      "${_configurarDespesaTotal()}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -104,8 +104,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             SliverFillRemaining(
-              child:
-              Padding(padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
+              child: Padding(padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
                 child: new Center(
                   child: _despesa == null
                       ? CircularProgressIndicator(
@@ -243,6 +242,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getOrcamento() async {
+
     var prefs = await SharedPreferences.getInstance();
     String email = (prefs.getString("login") ?? "");
     _user = await _usuarioService.getUserByEmail(email);
@@ -252,16 +252,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getDespesas() async {
+
     _despesa = await _despesaService.getDespesas();
     setState(() {});
   }
 
   void getTotalDespesas() async {
+
     _despesaTotal = await _despesaService.totalDespesa();
     setState(() {});
   }
 
   void deleteDespesa(int id) async {
+
     _despesa = await _despesaService.deleteDespesa(id);
     setState(() {
       getDespesas();
@@ -270,14 +273,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   _configurarDespesaTotal() {
+
     if (_despesaTotal.total != null ){
-      return formatNumero(_despesaTotal.total);
+      return "Despesa: "+formatNumero(_despesaTotal.total);
     }else{
-      return "0";
+      return "";
     }
   }
 
   _logout()async{
+
     var token = _logoutService.deleteToken();
     print("Token removido: $token");
     Navigator.pushReplacement(
