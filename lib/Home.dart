@@ -114,61 +114,70 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (BuildContext context, int index) {
                         Despesa despesa = _despesa[index];
 
-                        return Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                            child: Card(
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 2, 20, 10),
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                        "${despesa.descricao}\n"
+                          return Padding(
+                              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                              child: Card(
+                                child: Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          20, 2, 20, 10),
                                     ),
-                                    trailing: Text(
-                                        "R\$ ${formatNumero(despesa.valor)}",
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
-                                    ),
-                                    contentPadding: EdgeInsets.only(right: 16,),
-                                    leading: PopupMenuButton(
-                                      onSelected: (selection){
-                                        switch (selection) {
-                                          case MenuUtils.Excluir:
-                                            deleteDespesa(despesa.id);
-                                            snackbar(context, "Despesa excluída");
-                                            break;
-                                          case MenuUtils.Editar:
-                                            _inserirAtualizarDespesa(despesa: despesa);
-                                        }
+                                    ListTile(
+                                      title: Text(
+                                          "${despesa.descricao}\n"
+                                      ),
+                                      trailing: Text(
+                                          "R\$ ${formatNumero(despesa.valor)}",
+                                          style: TextStyle(fontSize: 16,
+                                              fontWeight: FontWeight.bold)
+                                      ),
+                                      contentPadding: EdgeInsets.only(
+                                        right: 16,),
+                                      leading: PopupMenuButton(
+                                        onSelected: (selection) {
+                                          switch (selection) {
+                                            case MenuUtils.Excluir:
+                                              deleteDespesa(despesa.id);
+                                              snackbar(
+                                                  context, "Despesa excluída");
+                                              break;
+                                            case MenuUtils.Editar:
+                                              _inserirAtualizarDespesa(
+                                                  despesa: despesa);
+                                          }
+                                        },
+                                        itemBuilder: (BuildContext context) {
+                                          return MenuUtils.opcoes.map((
+                                              String opcoes) {
+                                            return PopupMenuItem<String>(
+                                              value: opcoes,
+                                              child: Text(opcoes),
+                                            );
+                                          }).toList();
+                                        },
+                                      ),
+                                      subtitle: Text(
+                                          "Tipo: ${despesa
+                                              .tipoDespesa}\n${despesa
+                                              .data}",
+                                          style: TextStyle(fontSize: 12)
+                                      ),
+                                      onTap: () {
+                                        _inserirAtualizarDespesa(
+                                            despesa: despesa);
                                       },
-                                      itemBuilder: (BuildContext context){
-                                        return MenuUtils.opcoes.map((String opcoes){
-                                          return PopupMenuItem<String>(
-                                            value: opcoes,
-                                            child: Text(opcoes),
-                                          );
-                                        }).toList();
-                                      },
                                     ),
-                                    subtitle: Text(
-                                        "Tipo: ${despesa.tipoDespesa}\n${despesa
-                                            .data}",
-                                        style: TextStyle(fontSize: 12)
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          20, 2, 20, 10),
                                     ),
-                                    onTap: (){
-                                      _inserirAtualizarDespesa(despesa: despesa);
-                                    },
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        20, 2, 20, 10),
-                                  ),
-                                ],
-                              ),
-                            )
-                        );
+                                  ],
+                                ),
+                              )
+                          );
                       }
-                  ),
+                      ),
                 ),
               ),
             )
@@ -178,7 +187,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 2.0,
         onPressed: _inserirAtualizarDespesa,
         child: new Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueGrey,
       ),
     );
   }
