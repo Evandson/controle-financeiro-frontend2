@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   loading  == null ? "Carregando...":
-                  "Orçamento: ${formatNumero(_usuario.orcamento)}\n "
+                  "${_configurarOrcamento()}\n "
                       "${_configurarDespesaTotal()}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -287,6 +287,15 @@ class _HomePageState extends State<HomePage> {
       return "Despesa: "+formatNumero(_despesaTotal.total);
     }else{
       return "";
+    }
+  }
+
+  _configurarOrcamento() {
+
+    if (_despesaTotal.total != null ){
+      return "Orçamento: "+formatNumero(_usuario.orcamento);
+    }else{
+      return "Informar Orçamento!";
     }
   }
 
