@@ -239,7 +239,7 @@ class _HomePageState extends State<HomePage> {
               FlatButton(
                   onPressed: (){
 
-                    //_salvarAtualizarDespesa(despesaEsc: despesa);
+                    _salvarAtualizarDespesa(despesaEsc: despesa);
                     Navigator.pop(context);
                   },
                   child: Text(texto)
@@ -248,6 +248,23 @@ class _HomePageState extends State<HomePage> {
           );
         }
     );
+  }
+
+  _salvarAtualizarDespesa({Despesa despesaEsc}) async {
+
+    String descricao = _descricaoController.text;
+    double valor = _valorController.numberValue;
+
+    if (despesaEsc == null) {//salvar
+    }else{//atualizar
+      int id = despesaEsc.id;
+      print("Atualizar --> descrição: $descricao" " valor : $valor id: $id");
+      var _resultado = await DespesaService.AtualizarDespesa(id, descricao, valor);
+    }
+    setState(() {
+      getDespesas();
+      getTotalDespesas();
+    });
   }
 
   void getOrcamento() async {

@@ -61,6 +61,34 @@ class DespesaService {
     }
   }
 
+  static Future<bool> AtualizarDespesa(int id, String descricao, double valor) async {
+    String _urlBase = "http://localhost:8888/despesas/${id}";
+
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
+
+    Map params = {
+      "descricao": descricao,
+      "valor": valor
+    };
+
+    var _body = json.encode(params);
+
+    var response = await http.put(_urlBase, headers: header,
+        body: _body);
+
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<Despesa>> deleteDespesa(int id) async {
 
     var prefs = await SharedPreferences.getInstance();
