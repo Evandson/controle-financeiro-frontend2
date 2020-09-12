@@ -105,6 +105,34 @@ class UsuarioService {
     }
   }
 
+  static Future<bool> AtualizarPerfil(int id, String nome, double orcamento) async {
+    String _urlBase = "http://localhost:8888/usuarios/perfil/${id}";
+
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
+
+    Map params = {
+      "nome": nome,
+      "orcamento": orcamento
+    };
+
+    var _body = json.encode(params);
+
+    var response = await http.put(_urlBase, headers: header,
+        body: _body);
+
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<bool> newPassword(String senha, int id) async {
 
     String _urlBase = "http://localhost:8888/usuarios/password/${id}";
