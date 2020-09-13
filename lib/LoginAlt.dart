@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:controle_financeiro_frontend/NewPassword.dart';
 import 'package:controle_financeiro_frontend/utils/AlertaUtils.dart';
 import 'package:controle_financeiro_frontend/services/LoginService.dart';
+import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
+import 'package:controle_financeiro_frontend/models/Usuario.dart';
+import 'package:controle_financeiro_frontend/models/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginAlt extends StatefulWidget {
   @override
@@ -10,9 +14,21 @@ class LoginAlt extends StatefulWidget {
 
 class _LoginAltState extends State<LoginAlt> {
 
-  final _ctrlEmail = TextEditingController();
   final _ctrlSenha = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  Usuario _usuario = new Usuario();
+  UsuarioService _usuarioService = UsuarioService();
+
+  User _user = new User();
+
+  @override
+  void initState() {
+    super.initState();
+    getUsuario();
+  }
+
+  var loading = null;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +46,12 @@ class _LoginAltState extends State<LoginAlt> {
   }
 
   _body(BuildContext context) {
-    return Form(
+    return Center(
+      child: loading == null
+          ? Center(
+        child: CircularProgressIndicator(),
+      ):
+      new Form(
       key: _formKey,
       child: Container(
         padding: EdgeInsets.all(50),
@@ -44,7 +65,8 @@ class _LoginAltState extends State<LoginAlt> {
             _textFormField(
                 "Email",
                 "Digite o Email",
-                controller: _ctrlEmail,
+                enabled: false,
+                controller: TextEditingController(text: "${_usuario.email}"),
                 validator : _validaEmail
             ),
             _textFormField(
@@ -61,18 +83,22 @@ class _LoginAltState extends State<LoginAlt> {
           ],
         ),
       ),
+    )
     );
   }
   _textFormField(
       String label,
       String hint, {
+        bool enabled = true,
         bool senha = false,
+        String initialValue,
         TextEditingController controller,
         FormFieldValidator<String> validator,
       }) {
     return TextFormField(
       controller: controller,
       validator: validator,
+      enabled: enabled,
       obscureText: senha,
       decoration: InputDecoration(
         labelText: label,
@@ -123,7 +149,7 @@ class _LoginAltState extends State<LoginAlt> {
     if (!formOk) {
       return;
     }
-    String email = _ctrlEmail.text;
+    String email = _usuario.email;
     String senha = _ctrlSenha.text;
 
     print("login :$email senha: $senha");
@@ -136,6 +162,18 @@ class _LoginAltState extends State<LoginAlt> {
     }else{
       alert(context,"Login Inválido", "Login");
     }
+  }
+
+  void getUsuario() async {
+
+    var prefs = await SharedPreferences.getInstance();
+    String email = (prefs.getString("login") ?? "");
+    _user = await _usuarioService.getUserByEmail(email);
+    _usuario = await _usuarioService.getUsuario(this._user.id);
+    prefs.setInt("id", this._user.id);
+    loading = 1;
+
+    setState(() {});
   }
 
   _navegaHome(BuildContext context){

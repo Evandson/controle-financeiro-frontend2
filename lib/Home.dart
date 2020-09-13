@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage> {
 
   _configurarOrcamento() {
 
-    if (_despesaTotal.total != null ){
+    if (_usuario.orcamento != null ){
       return "Orçamento: "+formatNumero(_usuario.orcamento);
     }else{
       return "Informar Orçamento!";

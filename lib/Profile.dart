@@ -154,7 +154,7 @@ class _ProfileState extends State<Profile> {
         context: context,
         builder: (context){
           return AlertDialog(
-            title: Text("$texto despesa"),
+            title: Text("$texto Perfil"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
