@@ -3,7 +3,7 @@ import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 import 'package:controle_financeiro_frontend/models/Usuario.dart';
 import 'package:controle_financeiro_frontend/models/User.dart';
 import 'package:controle_financeiro_frontend/Home.dart';
-import 'package:controle_financeiro_frontend/LoginAlt.dart';
+import 'package:controle_financeiro_frontend/AltLogin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:controle_financeiro_frontend/utils/FormatUtils.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
@@ -106,6 +106,12 @@ class _ProfileState extends State<Profile> {
                             color: Colors.blue,
                           ),
                           onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AltLogin()
+                                )
+                            );
                           },
                         ),
                       ),
@@ -123,7 +129,7 @@ class _ProfileState extends State<Profile> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LoginAlt()
+                                  builder: (context) => AltLogin()
                               )
                             );
                           },

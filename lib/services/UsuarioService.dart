@@ -37,6 +37,14 @@ class UsuarioService {
     }
   }
 
+  static Future<bool> confirmEmail(String email, String confEmail) async {
+    if (email != confEmail) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<bool> forgotUser(String email) async {
 
     String _urlBase = "http://localhost:8888/auth/forgot";
@@ -147,6 +155,36 @@ class UsuarioService {
 
     Map params = {
       "senha": senha
+    };
+
+    var _body = json.encode(params);
+
+    var response = await http.put(_urlBase, headers: header,
+        body: _body);
+
+    print ("resposta ${response.statusCode}");
+
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> newEmail(String email, int id) async {
+
+    String _urlBase = "http://localhost:8888/usuarios/${id}";
+
+    var prefs = await SharedPreferences.getInstance();
+    String token = (prefs.getString("authorization") ?? "");
+
+    var header = {
+      "Content-Type": "application/json",
+      "Authorization": "$token"
+    };
+
+    Map params = {
+      "email": email
     };
 
     var _body = json.encode(params);
