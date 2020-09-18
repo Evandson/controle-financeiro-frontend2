@@ -3,6 +3,8 @@ import 'package:controle_financeiro_frontend/services/DespesaService.dart';
 import 'package:controle_financeiro_frontend/services/LogoutService.dart';
 import 'package:controle_financeiro_frontend/services/UsuarioService.dart';
 import 'package:controle_financeiro_frontend/models/Despesa.dart';
+import 'package:controle_financeiro_frontend/models/TipoDespesa.dart';
+import 'package:controle_financeiro_frontend/services/TipoDespesaService.dart';
 import 'package:controle_financeiro_frontend/models/DespesaTotal.dart';
 import 'package:controle_financeiro_frontend/models/User.dart';
 import 'package:controle_financeiro_frontend/models/Usuario.dart';
@@ -35,7 +37,6 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _descricaoController = TextEditingController();
   final _valorController = MoneyMaskedTextController();
 
-
   List<Despesa> _despesa;
   DespesaService _despesaService = DespesaService();
 
@@ -43,6 +44,11 @@ class _HomePageState extends State<HomePage> {
 
   Usuario _usuario = new Usuario();
   UsuarioService _usuarioService = UsuarioService();
+
+  String _selection;
+
+  List<TipoDespesa> _tipoDespesa;
+  TipoDespesaService _tipoDespesaService = TipoDespesaService();
 
   DespesaTotal _despesaTotal = new DespesaTotal();
 
@@ -57,6 +63,7 @@ class _HomePageState extends State<HomePage> {
     getDespesas();
     getOrcamento();
     getTotalDespesas();
+    getTipoDespesas();
   }
 
   @override
@@ -221,6 +228,22 @@ class _HomePageState extends State<HomePage> {
                       hintText: "Digite a descrição"
                   ),
                 ),
+                DropdownButton<String>(
+                  isExpanded: true,
+                  hint: new Text("Tipo"),
+                  items: _tipoDespesa.map((item){
+                    return new DropdownMenuItem(
+                      child: new Text(item.tipo),
+                      value: item.id.toString(),
+                    );
+                  }).toList(),
+                  onChanged: (newVal) {
+                    setState(() {
+                      _selection = newVal;
+                    });
+                  },
+                  value: _selection,
+                ),
                 TextField(
                   controller: _valorController,
                   keyboardType: TextInputType.number,
@@ -231,6 +254,8 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             ),
+            contentPadding: EdgeInsets.only(
+              top: 16, left: 16, right: 16, bottom: 16),
             actions: <Widget>[
               FlatButton(
                   onPressed: () => Navigator.pop(context),
@@ -280,6 +305,11 @@ class _HomePageState extends State<HomePage> {
   void getDespesas() async {
 
     _despesa = await _despesaService.getDespesas();
+    setState(() {});
+  }
+
+  void getTipoDespesas() async {
+    _tipoDespesa = await _tipoDespesaService.getTipoDespesas();
     setState(() {});
   }
 
