@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController _descricaoController = TextEditingController();
   final _valorController = MoneyMaskedTextController();
+  TextEditingController _tipoController = TextEditingController();
 
   List<Despesa> _despesa;
   DespesaService _despesaService = DespesaService();
@@ -205,10 +206,12 @@ class _HomePageState extends State<HomePage> {
     if(despesa == null){//salvar
       _descricaoController.text = "";
       _valorController.text = "";
+      _tipoController.text = "Tipo";
       texto = "Adicionar";
     }else{//atualizar
       _descricaoController.text = despesa.descricao;
       _valorController.text = formatNumero(despesa.valor);
+      _tipoController.text = despesa.tipoDespesa;
       texto = "Atualizar";
     }
 
@@ -228,9 +231,12 @@ class _HomePageState extends State<HomePage> {
                       hintText: "Digite a descrição"
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                ),
                 DropdownButton<String>(
                   isExpanded: true,
-                  hint: new Text("Tipo"),
+                  hint: new Text(_tipoController.text),
                   items: _tipoDespesa.map((item){
                     return new DropdownMenuItem(
                       child: new Text(item.tipo),
@@ -238,9 +244,11 @@ class _HomePageState extends State<HomePage> {
                     );
                   }).toList(),
                   onChanged: (newVal) {
+
                     setState(() {
                       _selection = newVal;
                     });
+                    print (_selection);
                   },
                   value: _selection,
                 ),
@@ -255,7 +263,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             contentPadding: EdgeInsets.only(
-              top: 16, left: 16, right: 16, bottom: 16),
+              top: 8, left: 16, right: 16, bottom: 8),
             actions: <Widget>[
               FlatButton(
                   onPressed: () => Navigator.pop(context),
@@ -279,6 +287,7 @@ class _HomePageState extends State<HomePage> {
 
     String descricao = _descricaoController.text;
     double valor = _valorController.numberValue;
+    String tipo = _tipoController.text;
 
     if (despesaEsc == null) {//salvar
     }else{//atualizar
