@@ -61,7 +61,7 @@ class DespesaService {
     }
   }
 
-  static Future<bool> AtualizarDespesa(int id, String descricao, double valor) async {
+  static Future<bool> AtualizarDespesa(int id, String descricao, double valor, int tipoDespesaId) async {
     String _urlBase = "http://localhost:8888/despesas/${id}";
 
     var prefs = await SharedPreferences.getInstance();
@@ -74,7 +74,10 @@ class DespesaService {
 
     Map params = {
       "descricao": descricao,
-      "valor": valor
+      "valor": valor,
+      "tipoDespesa": {
+        "id":tipoDespesaId
+      }
     };
 
     var _body = json.encode(params);

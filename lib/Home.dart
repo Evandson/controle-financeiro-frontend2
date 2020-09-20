@@ -46,10 +46,11 @@ class _HomePageState extends State<HomePage> {
   Usuario _usuario = new Usuario();
   UsuarioService _usuarioService = UsuarioService();
 
-  String _selection;
+  String _selection ;
 
   List<TipoDespesa> _tipoDespesa;
   TipoDespesaService _tipoDespesaService = TipoDespesaService();
+  int _tipoDespesaIdAtual;
 
   DespesaTotal _despesaTotal = new DespesaTotal();
 
@@ -212,6 +213,7 @@ class _HomePageState extends State<HomePage> {
       _descricaoController.text = despesa.descricao;
       _valorController.text = formatNumero(despesa.valor);
       _tipoController.text = despesa.tipoDespesa;
+      _tipoDespesaIdAtual = despesa.idTipoDespesa;
       texto = "Atualizar";
     }
 
@@ -250,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                     });
                     print (_selection);
                   },
-                  value: _selection,
+                  value:  _selection,
                 ),
                 TextField(
                   controller: _valorController,
@@ -287,13 +289,18 @@ class _HomePageState extends State<HomePage> {
 
     String descricao = _descricaoController.text;
     double valor = _valorController.numberValue;
-    String tipo = _tipoController.text;
+    String tipoDispesaEsc = _selection;
+    //int tipoDispesaId = int.parse(tipoDispesaEsc);
 
     if (despesaEsc == null) {//salvar
-    }else{//atualizar
+    }else { //atualizar
       int id = despesaEsc.id;
-      print("Atualizar --> descrição: $descricao" " valor : $valor id: $id");
-      var _resultado = await DespesaService.AtualizarDespesa(id, descricao, valor);
+      if (tipoDispesaEsc != null) {
+        int tipoDispesaId = int.parse(tipoDispesaEsc);
+        var _resultado = await DespesaService.AtualizarDespesa(id, descricao, valor, tipoDispesaId);
+      } else {
+        var _resultado = await DespesaService.AtualizarDespesa(id, descricao, valor, _tipoDespesaIdAtual);
+      }
     }
     setState(() {
       getDespesas();
