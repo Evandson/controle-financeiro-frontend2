@@ -228,6 +228,7 @@ class _HomePageState extends State<HomePage> {
                 TextField(
                   controller: _descricaoController,
                   autofocus: true,
+                  maxLength: 100,
                   decoration: InputDecoration(
                       labelText: "Descrição",
                       hintText: "Digite a descrição"
@@ -293,13 +294,20 @@ class _HomePageState extends State<HomePage> {
     //int tipoDispesaId = int.parse(tipoDispesaEsc);
 
     if (despesaEsc == null) {//salvar
+      if (tipoDispesaEsc != null) {
+        int tipoDispesaId = int.parse(tipoDispesaEsc);
+        var _resultado = await DespesaService.inserirDespesa(descricao, valor, tipoDispesaId, _usuario.id);
+      } else {
+        var _resultado = await DespesaService.inserirDespesa(descricao, valor, 1, _usuario.id);
+      }
+
     }else { //atualizar
       int id = despesaEsc.id;
       if (tipoDispesaEsc != null) {
         int tipoDispesaId = int.parse(tipoDispesaEsc);
-        var _resultado = await DespesaService.AtualizarDespesa(id, descricao, valor, tipoDispesaId);
+        var _resultado = await DespesaService.atualizarDespesa(id, descricao, valor, tipoDispesaId);
       } else {
-        var _resultado = await DespesaService.AtualizarDespesa(id, descricao, valor, _tipoDespesaIdAtual);
+        var _resultado = await DespesaService.atualizarDespesa(id, descricao, valor, _tipoDespesaIdAtual);
       }
     }
     setState(() {
