@@ -228,7 +228,6 @@ class _HomePageState extends State<HomePage> {
                 TextField(
                   controller: _descricaoController,
                   autofocus: true,
-                  maxLength: 100,
                   decoration: InputDecoration(
                       labelText: "Descrição",
                       hintText: "Digite a descrição"
